@@ -22,42 +22,42 @@
 
 ### 1. リポジトリをクローン
 
-```bash
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
-```
+  ```bash
+  git clone https://github.com/20m61/talkOnChime.git
+  cd talkOnChime
+  ```
 
 ### 2. 依存関係のインストール
 
-```bash
-npm install
-```
+  ```bash
+  npm install
+  ```
 
 ### 3. AWS クレデンシャルの設定
 
 AWS CLI を使用して AWS クレデンシャルを設定します。
 
-```bash
-aws configure
-```
+  ```bash
+  aws configure
+  ```
 
 ### 4. 環境変数の設定
 
 プロジェクトのルートディレクトリに `.env.local` ファイルを作成し、以下の環境変数を追加します。
 
-```plaintext
-AWS_REGION=your-aws-region
-AWS_ACCOUNT_ID=your-aws-account-id
-```
+  ```plaintext
+  AWS_REGION=your-aws-region
+  AWS_ACCOUNT_ID=your-aws-account-id
+  ```
 
 ### 5. ローカルでのビルドと実行
 
 ローカル環境でアプリケーションをビルドして実行します。
 
-```bash
-npm run build
-npm run start
-```
+  ```bash
+  npm run build
+  npm run start
+  ```
 
 ブラウザで `http://localhost:3000` にアクセスします。
 
@@ -65,9 +65,9 @@ npm run start
 
 ### 1. Docker イメージのビルド
 
-```bash
-docker build -t my-nextjs-chime-app .
-```
+   ```bash
+   docker build -t my-nextjs-chime-app .
+   ```
 
 ### 2. ECR へのプッシュ
 
@@ -109,67 +109,63 @@ docker build -t my-nextjs-chime-app .
 
 ### **その他の必要なファイル**
 
-1. **`.gitignore`ファイル**:
-   Gitに含めたくないファイルやディレクトリを指定するためのファイルです。
+#### `.gitignore`
 
-   ```plaintext
-   node_modules/
-   .env
-   .DS_Store
-   build/
-   .next/
-   docker-compose.override.yml
-   ```
+```plaintext
+node_modules/
+.env
+.DS_Store
+build/
+.next/
+docker-compose.override.yml
+```
 
-2. **`.env.local.example`ファイル**:
-   環境変数のテンプレートファイルです。ユーザーがコピーして `.env.local` として使用できるようにします。
+#### `.env.local.example`
 
-   ```plaintext
-   AWS_REGION=your-aws-region
-   AWS_ACCOUNT_ID=your-aws-account-id
-   ```
+```plaintext
+AWS_REGION=your-aws-region
+AWS_ACCOUNT_ID=your-aws-account-id
+```
 
-3. **`LICENSE`ファイル**:
-   オープンソースライセンス（例: MIT ライセンス）を使用する場合、このファイルをリポジトリに追加します。
+#### `LICENSE`
 
-   ```plaintext
-   MIT License
+```plaintext
+MIT License
 
-   Copyright (c) 2023 [Your Name]
+Copyright (c) 2023 [Your Name]
 
-   Permission is hereby granted, free of charge, to any person obtaining a copy
-   of this software and associated documentation files (the "Software"), to deal
-   in the Software without restriction, including without limitation the rights
-   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-   copies of the Software, and to permit persons to whom the Software is
-   furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-   The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-   THE SOFTWARE.
-   ```
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
 
-4. **`docker-compose.yml`（オプション）**:
-   開発環境で Docker を使用してアプリケーションを簡単に起動するためのファイル。これはオプションですが、便利な場合があります。
+#### `docker-compose.yml`（オプション）
 
-   ```yaml
-   version: '3'
-   services:
-     app:
-       image: my-nextjs-chime-app:latest
-       ports:
-         - "3000:3000"
-       environment:
-         - AWS_REGION=${AWS_REGION}
-         - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-   ```
+```yaml
+version: '3'
+services:
+  app:
+    image: my-nextjs-chime-app:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+```
 
 ### **まとめ**
 
