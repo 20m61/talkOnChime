@@ -1,8 +1,25 @@
 # talkOnChime
 
-- Next.js と Amazon Chime SDK を使用したテレカンファレンスシステム
- - このプロジェクトは、Next.js と Amazon Chime SDK を使用して構築されたテレカンファレンスシステムです。
- - システムは AWS Fargate 上にホストされており、ユーザーがビデオ会議に参加し、リアルタイムチャットを行うことができます。
+Next.js と Amazon Chime SDK を使用したテレカンファレンスシステム
+
+## 概要
+
+`talkOnChime` は、Next.js と Amazon Chime SDK を使用して構築されたテレカンファレンスシステムです。システムは AWS Fargate 上にホストされており、ユーザーがビデオ会議に参加し、リアルタイムチャットを行うことができます。
+
+## 構成
+
+以下は、システムの全体構成図です。
+
+```mermaid
+graph TD
+    A[Route 53 (DNS)] --> B[Application Load Balancer (ALB)]
+    B --> C[ECS Cluster (Fargate)]
+    C --> D[Fargate Service]
+    D --> E[Container 1 (Next.js App)]
+    D --> F[Container 2 (Next.js App)]
+    E --> G[Amazon ECR (Docker Images)]
+    F --> G[Amazon ECR (Docker Images)]
+```
 
 ## 機能
 
@@ -11,162 +28,87 @@
 - **サーバーサイドレンダリング**: Next.js を使用してサーバーサイドレンダリングと動的ルーティングを実現。
 - **コンテナ化デプロイ**: Docker を使用してアプリケーションをコンテナ化し、AWS Fargate 上にデプロイ。
 
-## 前提条件
+## 必要条件
 
 - [Node.js](https://nodejs.org/) (v14 以上)
 - [Docker](https://www.docker.com/)
 - [AWS CLI](https://aws.amazon.com/cli/)
+- [AWS CDK](https://aws.amazon.com/cdk/)
 - [AWS アカウント](https://aws.amazon.com/)
 
-## セットアップ
+## セットアップ手順
 
 ### 1. リポジトリをクローン
 
-  ```bash
-  git clone https://github.com/20m61/talkOnChime.git
-  cd talkOnChime
-  ```
+```bash
+git clone https://github.com/20m61/talkOnChime.git
+cd talkOnChime
+```
 
 ### 2. 依存関係のインストール
 
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
 
 ### 3. AWS クレデンシャルの設定
 
 AWS CLI を使用して AWS クレデンシャルを設定します。
 
-  ```bash
-  aws configure
-  ```
+```bash
+aws configure
+```
 
-### 4. 環境変数の設定
+### 4. Docker イメージのビルド
 
-プロジェクトのルートディレクトリに `.env.local` ファイルを作成し、以下の環境変数を追加します。
+```bash
+docker build -t talkonchime .
+```
 
-  ```plaintext
-  AWS_REGION=your-aws-region
-  AWS_ACCOUNT_ID=your-aws-account-id
-  ```
+### 5. CDK によるインフラストラクチャのデプロイ
 
-### 5. ローカルでのビルドと実行
-
-ローカル環境でアプリケーションをビルドして実行します。
-
-  ```bash
-  npm run build
-  npm run start
-  ```
-
-ブラウザで `http://localhost:3000` にアクセスします。
-
-## Docker と AWS Fargate でのデプロイ
-
-### 1. Docker イメージのビルド
+1. CDK プロジェクトをセットアップ:
 
    ```bash
-   docker build -t my-nextjs-chime-app .
+   cd cdk
+   npm install
    ```
 
-### 2. ECR へのプッシュ
+2. CDK を使用して AWS インフラストラクチャをデプロイ:
 
-1. ECR リポジトリがない場合は作成します。
+   ```bash
+   cdk deploy
+   ```
 
-    ```bash
-    aws ecr create-repository --repository-name my-nextjs-chime-app
-    ```
+### 6. アプリケーションのデプロイ
 
-2. Docker イメージをタグ付けして ECR にプッシュします。
+1. Docker イメージを ECR にプッシュ:
 
-    ```bash
-    $(aws ecr get-login --no-include-email --region your-aws-region)
-    docker tag my-nextjs-chime-app:latest your-aws-account-id.dkr.ecr.your-aws-region.amazonaws.com/my-nextjs-chime-app:latest
-    docker push your-aws-account-id.dkr.ecr.your-aws-region.amazonaws.com/my-nextjs-chime-app:latest
-    ```
+   ```bash
+   aws ecr create-repository --repository-name talkonchime
+   docker tag talkonchime:latest <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/talkonchime:latest
+   docker push <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/talkonchime:latest
+   ```
 
-### 3. AWS Fargate へのデプロイ
-
-1. Fargate の起動タイプを使用して ECS クラスターを作成します。
-2. Docker イメージを使用して新しいタスク定義を作成します。
-3. タスク定義を使用して ECS サービスを作成します。
-4. ALB (Application Load Balancer) を設定して、ECS サービスにトラフィックをルーティングします。
-5. Route 53 のレコードを設定して、ドメインを ALB に紐付けます。
+2. Fargate サービスが自動的にデプロイされます。
 
 ## 使用方法
 
-1. デプロイされたアプリケーションの URL にアクセスします。
-2. 名前を入力して会議に参加します。
-3. アプリケーション内でビデオ会議とチャット機能を使用します。
+デプロイが完了したら、ALB のエンドポイントにアクセスし、アプリケーションを使用します。
+
+1. アクセスして名前を入力し、会議に参加。
+2. アプリケーション内でビデオ会議とチャット機能を使用。
 
 ## 貢献
 
-貢献は大歓迎です！変更を提案する場合は、プルリクエストを提出するか、イシューを立ててください。
+貢献は大歓迎です！プルリクエストを提出するか、イシューを立ててください。
 
 ## ライセンス
 
 このプロジェクトは MIT ライセンスのもとで公開されています。詳細については [LICENSE](LICENSE) ファイルを参照してください。
 
-### **その他の必要なファイル**
-
-#### `.gitignore`
-
-```plaintext
-node_modules/
-.env
-.DS_Store
-build/
-.next/
-docker-compose.override.yml
-```
-
-#### `.env.local.example`
-
-```plaintext
-AWS_REGION=your-aws-region
-AWS_ACCOUNT_ID=your-aws-account-id
-```
-
-#### `LICENSE`
-
-```plaintext
-MIT License
-
-Copyright (c) 2023 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
-
-#### `docker-compose.yml`（オプション）
-
-```yaml
-version: '3'
-services:
-  app:
-    image: my-nextjs-chime-app:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - AWS_REGION=${AWS_REGION}
-      - AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-```
-
 ### **まとめ**
 
-これらのファイルとドキュメントをリポジトリに含めることで、プロジェクトのセットアップ、構築、デプロイ、運用がスムーズに行えるようになります。質問やサポートが必要であれば、いつでもお知らせください。
+このセットアップ手順に従って、Next.js、AWS CDK、および Fargate を使用した完全なテレカンファレンスシステムを構築できます。システムはスケーラブルで管理しやすく、必要に応じて拡張可能です。
+
+何か質問やサポートが必要な場合は、いつでもお知らせください。
